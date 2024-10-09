@@ -123,18 +123,15 @@ def wrangle_df(filepath='medical_raw_df.csv'):
                    'customer_id',
                    'interaction',
                    'unique_id',
-                   # 'city',
+                   'city',
                    # 'state',
-                   # 'county',
+                   'county',
                    'zip',
                    'lat',
                    'lng',
                    'income',
                    'job',
                    'timezone'
-                   # 'daily_charges',
-                   # 'additional_charges',
-                   # 'readmission'
                     ,'item1'
                     ,'item2'
                     ,'item3'
@@ -146,3 +143,15 @@ def wrangle_df(filepath='medical_raw_df.csv'):
     df.drop(columns=remove_cols, inplace=True)
     
     return df
+
+
+
+
+
+def model_preprocessing():
+
+    
+
+
+
+    return preprocessed_df
