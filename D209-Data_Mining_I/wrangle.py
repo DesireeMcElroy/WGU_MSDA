@@ -4,11 +4,17 @@ import numpy as np
 
 
 
-def wrangle_df(filepath='medical_raw_df.csv'):
+def get_df(filepath='medical_raw_df.csv'):
+    '''
+    This function takes in filepath as an argument and returns a readable dataframe
+    with dataframe info
     
-    filepath = filepath
+    
+    Args:
+    filepath: default 'medical_raw_df.csv'
+    '''
+    
     df = pd.read_csv(filepath, index_col=[0])
-    
     # lowercase columns
     df.columns = map(str.lower, df.columns)
     # verify no nulls
@@ -16,39 +22,57 @@ def wrangle_df(filepath='medical_raw_df.csv'):
     # verify no duplicates
     assert df.duplicated().sum() == 0
     
-    # change timezone column entries before changing data type
-    tz_dict = {
-        "America/Puerto_Rico" : "US - Puerto Rico",
-        "America/New_York": "US - Eastern",
-        "America/Detroit" : "US - Eastern",
-        "America/Indiana/Indianapolis" : "US - Eastern",
-        "America/Indiana/Vevay" : "US - Eastern",
-        "America/Indiana/Vincennes" : "US - Eastern",
-        "America/Kentucky/Louisville" : "US - Eastern",
-        "America/Toronto" : "US - Eastern",
-        "America/Indiana/Marengo" : "US - Eastern",
-        "America/Indiana/Winamac" : "US - Eastern",
-        "America/Chicago" : "US - Central", 
-        "America/Menominee" : "US - Central",
-        "America/Indiana/Knox" : "US - Central",
-        "America/Indiana/Tell_City" : "US - Central",
-        "America/North_Dakota/Beulah" : "US - Central",
-        "America/North_Dakota/New_Salem" : "US - Central",
-        "America/Denver" : "US - Mountain",
-        "America/Boise" : "US - Mountain",
-        "America/Phoenix" : "US - Arizona",
-        "America/Los_Angeles" : "US - Pacific",
-        "America/Nome" : "US - Alaskan",
-        "America/Anchorage" : "US - Alaskan",
-        "America/Sitka" : "US - Alaskan",
-        "America/Yakutat" : "US - Alaskan",
-        "America/Adak" : "US - Aleutian",
-        "Pacific/Honolulu" : 'US - Hawaiian'
-        }
-    df.timezone.replace(tz_dict, inplace=True)
     
-    # convert zip column to str, then fill 0s in entries
-    df.zip = df.zip.astype('str').str.zfill(5)
+    print(df.info())
+    
+    return df
+
+
+
+
+def clean_df(df):
+    '''
+    This function takes the medical dataframe and cleans it by correcting time zone entries,
+    zip code, unifying the boolean value entries to 1,0, rounding continuous vars reassigning
+    and data types. Lastly, it removes unnescessary columns.
+    
+    Args:
+    df: the medical dataset in a pandas dataframe
+    '''
+    
+    # # change timezone column entries before changing data type
+    # tz_dict = {
+    #     "America/Puerto_Rico" : "US - Puerto Rico",
+    #     "America/New_York": "US - Eastern",
+    #     "America/Detroit" : "US - Eastern",
+    #     "America/Indiana/Indianapolis" : "US - Eastern",
+    #     "America/Indiana/Vevay" : "US - Eastern",
+    #     "America/Indiana/Vincennes" : "US - Eastern",
+    #     "America/Kentucky/Louisville" : "US - Eastern",
+    #     "America/Toronto" : "US - Eastern",
+    #     "America/Indiana/Marengo" : "US - Eastern",
+    #     "America/Indiana/Winamac" : "US - Eastern",
+    #     "America/Chicago" : "US - Central", 
+    #     "America/Menominee" : "US - Central",
+    #     "America/Indiana/Knox" : "US - Central",
+    #     "America/Indiana/Tell_City" : "US - Central",
+    #     "America/North_Dakota/Beulah" : "US - Central",
+    #     "America/North_Dakota/New_Salem" : "US - Central",
+    #     "America/Denver" : "US - Mountain",
+    #     "America/Boise" : "US - Mountain",
+    #     "America/Phoenix" : "US - Arizona",
+    #     "America/Los_Angeles" : "US - Pacific",
+    #     "America/Nome" : "US - Alaskan",
+    #     "America/Anchorage" : "US - Alaskan",
+    #     "America/Sitka" : "US - Alaskan",
+    #     "America/Yakutat" : "US - Alaskan",
+    #     "America/Adak" : "US - Aleutian",
+    #     "Pacific/Honolulu" : 'US - Hawaiian'
+    #     }
+    # df.timezone.replace(tz_dict, inplace=True)
+    
+    # # convert zip column to str, then fill 0s in entries
+    # df.zip = df.zip.astype('str').str.zfill(5)
     
     # changing datatypes
     # change columns to boolean data type
