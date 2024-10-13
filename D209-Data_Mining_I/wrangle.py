@@ -2,6 +2,9 @@
 import pandas as pd
 import numpy as np
 
+# pre-processing
+from sklearn.preprocessing import StandardScaler
+
 
 
 def get_df(filepath='medical_raw_df.csv'):
@@ -39,41 +42,7 @@ def clean_df(df):
     Args:
     df: the medical dataset in a pandas dataframe
     '''
-    
-    # # change timezone column entries before changing data type
-    # tz_dict = {
-    #     "America/Puerto_Rico" : "US - Puerto Rico",
-    #     "America/New_York": "US - Eastern",
-    #     "America/Detroit" : "US - Eastern",
-    #     "America/Indiana/Indianapolis" : "US - Eastern",
-    #     "America/Indiana/Vevay" : "US - Eastern",
-    #     "America/Indiana/Vincennes" : "US - Eastern",
-    #     "America/Kentucky/Louisville" : "US - Eastern",
-    #     "America/Toronto" : "US - Eastern",
-    #     "America/Indiana/Marengo" : "US - Eastern",
-    #     "America/Indiana/Winamac" : "US - Eastern",
-    #     "America/Chicago" : "US - Central", 
-    #     "America/Menominee" : "US - Central",
-    #     "America/Indiana/Knox" : "US - Central",
-    #     "America/Indiana/Tell_City" : "US - Central",
-    #     "America/North_Dakota/Beulah" : "US - Central",
-    #     "America/North_Dakota/New_Salem" : "US - Central",
-    #     "America/Denver" : "US - Mountain",
-    #     "America/Boise" : "US - Mountain",
-    #     "America/Phoenix" : "US - Arizona",
-    #     "America/Los_Angeles" : "US - Pacific",
-    #     "America/Nome" : "US - Alaskan",
-    #     "America/Anchorage" : "US - Alaskan",
-    #     "America/Sitka" : "US - Alaskan",
-    #     "America/Yakutat" : "US - Alaskan",
-    #     "America/Adak" : "US - Aleutian",
-    #     "Pacific/Honolulu" : 'US - Hawaiian'
-    #     }
-    # df.timezone.replace(tz_dict, inplace=True)
-    
-    # # convert zip column to str, then fill 0s in entries
-    # df.zip = df.zip.astype('str').str.zfill(5)
-    
+
     # changing datatypes
     # change columns to boolean data type
     to_bool = ['readmis',
@@ -148,7 +117,7 @@ def clean_df(df):
                    'interaction',
                    'unique_id',
                    'city',
-                   # 'state',
+                   'state',
                    'county',
                    'zip',
                    'lat',
@@ -167,6 +136,83 @@ def clean_df(df):
     df.drop(columns=remove_cols, inplace=True)
     
     return df
+
+
+def dummify_categorical(df, cat_vars)
+    '''
+    This function
+    '''
+    print(f'Categorical variables to be one hot encoded {cat_vars}')
+    print('---------')
+    # Create dummies for the specified columns
+    dummy_df = pd.get_dummies(df[cat_vars], drop_first=True)
+
+    print(f'New dummy columns {list(dummy_df.columns)}')
+
+    # concatenate the original dataframe with the dummies
+    df = pd.concat([df, dummy_df], axis=1)
+
+    # # drop the original columns 
+    df.drop(columns = cat_vars, inplace=True)
+    
+    return df
+
+
+
+def scale_vars(df, cont_vars, num_vars):
+    '''
+    This function
+    '''
+    # assign scaler
+    scaler = StandardScaler()
+
+    # run scale function on columns to scale
+    df[cont_vars] = scaler.fit_transform(df[cont_vars])
+    
+    # run scale function on columns to scale
+    df[num_vars] = scaler.fit_transform(df[num_vars])
+    
+    return df
+
+
+
+
+
+def transform_bool(df, bool_vars):
+    '''
+    This function
+    '''
+    # replace True with 1's and False with 0's
+    df[bool_vars] = df[bool_vars].replace(True, 1)
+    df[bool_vars] = df[bool_vars].replace(False, 0)
+
+    df[bool_vars].head()
+
+return df
+
+
+
+def split_data(df, test_size=.2)
+    '''
+
+    '''
+    # split data into train, validate and test sets
+    train, validate = train_test_split(df,
+                                            test_size=test_size, 
+                                            random_state=314,
+                                            shuffle=True)
+
+
+    train.to_csv('train_df.csv')
+    validate.to_csv('validate_df.csv')
+
+    print(f'Train shape ---> {train.shape}')
+    print(f'Validate shape ---> {validate.shape}')
+
+
+    return train, validate
+
+
 
 
 
